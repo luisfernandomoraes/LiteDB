@@ -14,17 +14,17 @@ namespace LiteDB
             foreach (var value in left.ZipValues(right))
             {
                 // if any side are string, concat
-                if (value.First.IsString || value.Second.IsString)
+                if (value.Left.IsString || value.Right.IsString)
                 {
-                    yield return value.First.RawValue?.ToString() + value.Second.RawValue?.ToString();
+                    yield return value.Left.RawValue?.ToString() + value.Right.RawValue?.ToString();
                 }
-                else if (!value.First.IsNumber || !value.Second.IsNumber)
+                else if (!value.Left.IsNumber || !value.Right.IsNumber)
                 {
                     continue;
                 }
                 else
                 {
-                    yield return value.First + value.Second;
+                    yield return value.Left + value.Right;
                 }
             }
         }
@@ -33,9 +33,9 @@ namespace LiteDB
         {
             foreach (var value in left.ZipValues(right))
             {
-                if (!value.First.IsNumber || !value.Second.IsNumber) continue;
+                if (!value.Left.IsNumber || !value.Right.IsNumber) continue;
 
-                yield return value.First - value.Second;
+                yield return value.Left - value.Right;
             }
         }
 
@@ -43,9 +43,9 @@ namespace LiteDB
         {
             foreach (var value in left.ZipValues(right))
             {
-                if (!value.First.IsNumber || !value.Second.IsNumber) continue;
+                if (!value.Left.IsNumber || !value.Right.IsNumber) continue;
 
-                yield return value.First * value.Second;
+                yield return value.Left * value.Right;
             }
         }
 
@@ -53,19 +53,9 @@ namespace LiteDB
         {
             foreach (var value in left.ZipValues(right))
             {
-                if (!value.First.IsNumber || !value.Second.IsNumber) continue;
+                if (!value.Left.IsNumber || !value.Right.IsNumber) continue;
 
-                yield return value.First / value.Second;
-            }
-        }
-
-        public static IEnumerable<BsonValue> MOD(IEnumerable<BsonValue> left, IEnumerable<BsonValue> right)
-        {
-            foreach (var value in left.ZipValues(right))
-            {
-                if (!value.First.IsNumber || !value.Second.IsNumber) continue;
-
-                yield return value.First % value.Second;
+                yield return value.Left / value.Right;
             }
         }
 
@@ -73,7 +63,7 @@ namespace LiteDB
         {
             foreach (var value in left.ZipValues(right))
             {
-                yield return value.First == value.Second;
+                yield return value.Left == value.Right;
             }
         }
 
@@ -81,7 +71,7 @@ namespace LiteDB
         {
             foreach (var value in left.ZipValues(right))
             {
-                yield return value.First != value.Second;
+                yield return value.Left != value.Right;
             }
         }
 
@@ -89,7 +79,7 @@ namespace LiteDB
         {
             foreach (var value in left.ZipValues(right))
             {
-                yield return value.First > value.Second;
+                yield return value.Left > value.Right;
             }
         }
 
@@ -97,7 +87,7 @@ namespace LiteDB
         {
             foreach (var value in left.ZipValues(right))
             {
-                yield return value.First >= value.Second;
+                yield return value.Left >= value.Right;
             }
         }
 
@@ -105,7 +95,7 @@ namespace LiteDB
         {
             foreach (var value in left.ZipValues(right))
             {
-                yield return value.First < value.Second;
+                yield return value.Left < value.Right;
             }
         }
 
@@ -113,7 +103,7 @@ namespace LiteDB
         {
             foreach (var value in left.ZipValues(right))
             {
-                yield return value.First <= value.Second;
+                yield return value.Left <= value.Right;
             }
         }
 
@@ -121,7 +111,7 @@ namespace LiteDB
         {
             foreach (var value in left.ZipValues(right))
             {
-                yield return value.First && value.Second;
+                yield return value.Left && value.Right;
             }
         }
 
@@ -129,15 +119,7 @@ namespace LiteDB
         {
             foreach (var value in left.ZipValues(right))
             {
-                yield return value.First || value.Second;
-            }
-        }
-
-        public static IEnumerable<BsonValue> IIF(IEnumerable<BsonValue> condition, IEnumerable<BsonValue> ifTrue, IEnumerable<BsonValue> ifFalse)
-        {
-            foreach (var value in condition.ZipValues(ifTrue, ifFalse).Where(x => x.First.IsBoolean))
-            {
-                yield return value.First.AsBoolean ? value.Second : value.Third;
+                yield return value.Left || value.Right;
             }
         }
     }

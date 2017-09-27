@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LiteDB
 {
     public partial class LiteCollection<T>
     {
         /// <summary>
-        /// Insert a new entity to this collection. Document Id must be a new value in collection - Returns document Id
+        /// Insert a new document to this collection. Document Id must be a new value in collection - Returns document Id
         /// </summary>
-        public BsonValue Insert(T document)
+        public void Insert(T document)
         {
             if (document == null) throw new ArgumentNullException("document");
 
-            var docs = this.GetBsonDocs(new[] { document });
-
-            _engine.Value.Insert(_name, docs, _autoId);
-
-            return docs.Single()["_id"];
+            _engine.Value.Insert(_name, this.GetBsonDocs(new [] { document }), _autoId);
         }
 
         /// <summary>

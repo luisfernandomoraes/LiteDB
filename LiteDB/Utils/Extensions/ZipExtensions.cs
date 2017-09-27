@@ -9,17 +9,13 @@ namespace LiteDB
 {
     internal static class ZipExtensions
     {
-        public static IEnumerable<ZipValues> ZipValues(this IEnumerable<BsonValue> first, IEnumerable<BsonValue> second, IEnumerable<BsonValue> thrid = null)
+        public static IEnumerable<ZipValues> ZipValues(this IEnumerable<BsonValue> first, IEnumerable<BsonValue> second)
         {
             var firstEnumerator = first.GetEnumerator();
             var secondEnumerator = second.GetEnumerator();
-            var thridEnumerator = thrid?.GetEnumerator();
-
             var firstCurrent = BsonValue.Null;
             var secondCurrent = BsonValue.Null;
-            var thridCurrent = BsonValue.Null;
 
-            // loop for read all first enumerable
             while (firstEnumerator.MoveNext())
             {
                 firstCurrent = firstEnumerator.Current;
@@ -28,48 +24,28 @@ namespace LiteDB
                 {
                     secondCurrent = secondEnumerator.Current;
                 }
-                if (thrid != null && thridEnumerator.MoveNext())
-                {
-                    thridCurrent = thridEnumerator.Current;
-                }
 
-                yield return new ZipValues(firstCurrent, secondCurrent, thridCurrent);
+                yield return new ZipValues(firstCurrent, secondCurrent);
             }
-
-            // loop for use all second enumerable
             while (secondEnumerator.MoveNext())
             {
                 secondCurrent = secondEnumerator.Current;
 
-                if (thrid != null && thridEnumerator.MoveNext())
-                {
-                    thridCurrent = thridEnumerator.Current;
-                }
-
-                yield return new ZipValues(firstCurrent, secondCurrent, thridCurrent);
-            }
-
-            // loop for use all thrid enumerable (if exists)
-            while (thrid != null && thridEnumerator.MoveNext())
-            {
-                thridCurrent = thridEnumerator.Current;
-
-                yield return new ZipValues(firstCurrent, secondCurrent, thridCurrent);
+                yield return new ZipValues(firstCurrent, secondCurrent);
             }
         }
+
     }
 
     internal class ZipValues
     {
-        public BsonValue First { get; set; }
-        public BsonValue Second { get; set; }
-        public BsonValue Third { get; set; }
+        public BsonValue Left { get; set; }
+        public BsonValue Right { get; set; }
 
-        public ZipValues(BsonValue first, BsonValue second, BsonValue thrid)
+        public ZipValues(BsonValue left, BsonValue right)
         {
-            this.First = first;
-            this.Second = second;
-            this.Third = thrid;
+            this.Left = left;
+            this.Right = right;
         }
     }
 }

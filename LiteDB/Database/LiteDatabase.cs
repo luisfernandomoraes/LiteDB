@@ -121,15 +121,30 @@ namespace LiteDB
             _engine = new LazyLoad<LiteEngine>(() => new LiteEngine(diskService, password: password, timeout: timeout, cacheSize: cacheSize, log: _log ));
         }
 
-        #endregion
+		#endregion
 
-        #region Collections
 
-        /// <summary>
-        /// Get a collection using a entity class as strong typed document. If collection does not exits, create a new one.
-        /// </summary>
-        /// <param name="name">Collection name (case insensitive)</param>
-        public LiteCollection<T> GetCollection<T>(string name)
+	    #region Transaction
+
+	    /// <summary>
+	    /// Starts new transaction
+	    /// </summary>
+	    public LiteTransaction BeginTrans()
+	    {
+		    _engine.Value.BeginTrans();
+
+		    return new LiteTransaction(() => _engine.Value.Commit(), _engine.Value.Rollback);
+	    }
+
+	    #endregion
+
+		#region Collections
+
+		/// <summary>
+		/// Get a collection using a entity class as strong typed document. If collection does not exits, create a new one.
+		/// </summary>
+		/// <param name="name">Collection name (case insensitive)</param>
+		public LiteCollection<T> GetCollection<T>(string name)
         {
             return new LiteCollection<T>(name, _engine, _mapper, _log);
         }

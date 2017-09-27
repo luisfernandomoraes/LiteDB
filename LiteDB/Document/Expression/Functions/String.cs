@@ -69,9 +69,9 @@ namespace LiteDB
 
         public static IEnumerable<BsonValue> FORMAT(IEnumerable<BsonValue> values, IEnumerable<BsonValue> format)
         {
-            foreach (var value in values.ZipValues(format).Where(x => x.Second.IsString))
+            foreach (var value in values.ZipValues(format))
             {
-                yield return string.Format("{0:" + value.Second.AsString + "}", value.First.RawValue);
+                yield return string.Format("{0:" + value.Right + "}", value.Left.RawValue);
             }
         }
     }
